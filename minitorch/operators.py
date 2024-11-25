@@ -3,7 +3,7 @@
 import math
 
 # ## Task 0.1
-from typing import Callable, Iterable
+from typing import Callable, Iterable, Optional
 
 #
 # Implementation of a prelude of elementary functions.
@@ -119,12 +119,47 @@ def relu_back(a: float, b: float) -> float:
 # - map
 # - zipWith
 # - reduce
+def map(sequence: Iterable, func: Callable) -> Iterable:
+    """Higher-order function that applies a given function to each element of an iterable"""
+    return [func(item) for item in sequence]
+        
+def zipWith(seq1: Iterable, seq2: Iterable, func: Callable) -> Iterable:
+    """Higher-order function that combines elements from two iterables using a given function"""
+    return [func(item1, item2) for (item1, item2) in zip(seq1, seq2)]
+
+def reduce(seq: Iterable, func: Callable[[float, float], float]) -> Optional[float]:
+    """Higher-order function that reduces an iterable to a single value using a given function"""
+    # if seq is empty, returns None
+    res = None
+    for item in seq:
+        if res is None:
+            res = item
+        else:
+            res = func(res, item)
+
+    return res
+
 #
 # Use these to implement
 # - negList : negate a list
+def negList(sequence: Iterable[float]) -> Iterable[float]:
+    """Negate a list"""
+    return map(sequence, neg)
+
 # - addLists : add two lists together
+def addLists(seq1: Iterable[float], seq2: Iterable[float]) -> Iterable[float]:
+    """Add two lists together"""
+    return zipWith(seq1=seq1, seq2=seq2, func=add)
+
 # - sum: sum lists
+def sum(sequence: Iterable[float]) -> float:
+    """Sum lists"""
+    res = reduce(sequence, add) 
+    # return 0 if sequence if empty
+    return res if res is not None else 0.0
+
 # - prod: take the product of lists
-
-
-# TODO: Implement for Task 0.3.
+def prod(sequence: Iterable[float]) -> float:
+    """Take the product of lists"""
+    res = reduce(sequence, mul)
+    return res if res is not None else 0.0
